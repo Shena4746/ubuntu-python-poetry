@@ -32,9 +32,12 @@ RUN apt remove --purge -y git curl \
 	libncursesw5-dev libsqlite3-dev libssl-dev \
 	zlib1g-dev uuid-dev
 RUN apt -y autoremove
+RUN apt -y clean
+RUN rm -rf /var/lib/apt/lists/*
 
 FROM python-base
 ENV PATH ${POETRY_HOME}/bin:$PATH
+ENV POETRY_VIRTUALENVS_CREATE=false
 # copy python, poetry and git
 COPY --from=builder ${PYTHON_ROOT} ${PYTHON_ROOT}
 COPY --from=builder ${POETRY_HOME} ${POETRY_HOME}
