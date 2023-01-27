@@ -1,0 +1,14 @@
+ARG PYTHON_VERSION=3.11.1
+FROM shena4746/ubuntu-python-poetry:${PYTHON_VERSION}q
+ARG R_VERSION=4.2.2-1.2204.0
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y wget gpg make gcc g++ \
+	&& wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | gpg --dearmor -o /usr/share/keyrings/r-project.gpg \
+	&& echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | tee -a /etc/apt/sources.list.d/r-project.list \
+	&& apt update \
+	&& apt install -y --no-install-recommends --allow-downgrades r-base=${R_VERSION} r-recommended=${R_VERSION} r-base-dev=${R_VERSION} \
+	&& Rscript -e "install.packages(c('knitr','rmarkdown', 'reticulate'))" \
+	&& apt remove -y --purge wget gpg make gcc g++ \
+	&& apt -y autoremove \
+	&& apt clean \
+	&& rm -rf /var/lib/apt/lists/*
