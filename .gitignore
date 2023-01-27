@@ -1,2 +1,4 @@
 # ignore .history directory created by vscode extension
 /.history/
+/**/.RData
+/**/.Rhistory

@@ -1,6 +1,5 @@
 .gitignore
 */*.log
 Makefile
-*.env
 .history
 .github
