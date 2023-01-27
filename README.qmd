@@ -1,0 +1,65 @@
+---
+engine: knitr
+format: gfm
+editor_options:
+  markdown:
+    wrap: sentence
+---
+# Docker image Ubuntu + python + poetry (+ Quarto + R)  
+
+A minimal docker image for python projects.
+The latest version includes
+
+- Ubuntu 22.04.1 LTS
+- `r system('python --version', intern=TRUE)`
+- `r system('poetry --version', intern=TRUE)`
+- Optional:
+	- Quarto `r system('quarto --version', intern=TRUE)`
+	- `r version[['version.string']]`
+
+```{bash}
+#| echo: false
+#| output: asis
+github_url=$(cat .git/config | grep https | awk '{print $3}' | sed -e 's/\.git//g')
+echo "The image is maintained in [GitHub](${github_url})."
+```
+
+## Install
+
+```{bash}
+#| echo: false
+#| output: asis
+source ./.env
+prefix="https://hub.docker.com/r"
+docker_hub_url=${prefix}/${DOCKER_USER}/${IMAGE_NAME}
+echo "Available on [Docker Hub](${docker_hub_url})"
+```
+
+Every image tag like 3.11.1q represents `python version` + `q: plus Quarto` + `r: plus R`. For instance, 3.11.1qr includes python3.11.1 with Quarto and R.
+
+## Change Python/Quarto version
+
+You can specify the version, for instance, by passing`PYTHON_VERSION=` in `./.env`, and then `make build`. The specified python version should be available by the latest pyenv.
+
+## Package/Version detail
+
+```{bash}
+#| echo: true
+cat /etc/os-release
+cat /proc/version
+```
+
+```{r}
+#| echo: true
+R.version
+# R packages
+library(magrittr)
+installed.packages() %>%
+    as.data.frame() %>%
+    .[, c("Package", "Version")]
+```
+
+```{bash}
+python --version
+pip list
+```

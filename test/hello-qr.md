@@ -1,35 +1,30 @@
 
-# Docker image Ubuntu + python + poetry (+ Quarto + R)
+For a demonstration of a line plot on a polar axis, see
+[Figure 1](#fig-polar).
 
-A minimal docker image for python projects. The latest version comes
-with
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
 
-- Ubuntu 22.04.1 LTS
-- Python 3.11.1
-- Poetry (version 1.3.2)
-- Optional:
-  - Quarto 1.2.313
-  - R version 4.2.2 Patched (2022-11-10 r83330)
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(
+  subplot_kw = {'projection': 'polar'} 
+)
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
 
-The image is maintained in
-[GitHub](https://github.com/Shena4746/ubuntu-python-poetry).
+<figure>
+<img src="hello-qr_files/figure-commonmark/fig-polar-1.png"
+id="fig-polar" alt="Figure 1: A line plot on a polar axis" />
+<figcaption aria-hidden="true">Figure 1: A line plot on a polar
+axis</figcaption>
+</figure>
 
-## Install
-
-Available on [Docker
-Hub](https://hub.docker.com/r/shena4746/ubuntu-python-poetry).
-
-Every image tag like 3.11.1q represents `python version` +
-`q: plus Quarto` + `r: plus R`. For instance, 3.11.1qr includes
-python3.11.1 with Quarto and R.
-
-## Change Python/Quarto version
-
-You can specify the version just by passing `PYTHON_VERSION=` in `./.env`, and then run
-`make build`. The specified python version should be available by the
-latest pyenv.
-
-## Package/Version detail
+Display linux info of this docker conitainer.
 
 ``` bash
 cat /etc/os-release
@@ -49,6 +44,8 @@ cat /proc/version
     PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
     UBUNTU_CODENAME=jammy
     Linux version 5.15.79.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Wed Nov 23 01:01:46 UTC 2022
+
+Show versions of R and installed packages.
 
 ``` r
 R.version
@@ -80,6 +77,8 @@ installed.packages() %>%
 
                   Package Version
     R6                 R6   2.5.1
+    Rcpp             Rcpp  1.0.10
+    RcppTOML     RcppTOML   0.2.1
     base64enc   base64enc   0.1-3
     bslib           bslib   0.4.2
     cachem         cachem   1.0.6
@@ -88,30 +87,32 @@ installed.packages() %>%
     ellipsis     ellipsis   0.3.2
     evaluate     evaluate    0.20
     fastmap       fastmap   1.1.0
-    fs                 fs   1.5.2
+    fs                 fs   1.6.0
     glue             glue   1.6.2
     here             here   1.0.1
     highr           highr    0.10
     htmltools   htmltools   0.5.4
     jquerylib   jquerylib   0.1.4
     jsonlite     jsonlite   1.8.4
-    knitr           knitr    1.41
+    knitr           knitr    1.42
     lifecycle   lifecycle   1.0.3
     magrittr     magrittr   2.0.3
     memoise       memoise   2.0.1
     mime             mime    0.12
+    png               png   0.1-8
     rappdirs     rappdirs   0.3.3
+    reticulate reticulate    1.27
     rlang           rlang   1.0.6
     rmarkdown   rmarkdown    2.20
     rprojroot   rprojroot   2.0.3
-    sass             sass   0.4.4
+    sass             sass   0.4.5
     stringi       stringi  1.7.12
     stringr       stringr   1.5.0
     tinytex       tinytex    0.43
-    vctrs           vctrs   0.5.1
+    vctrs           vctrs   0.5.2
     withr           withr   2.5.0
     xfun             xfun    0.36
-    yaml             yaml   2.3.6
+    yaml             yaml   2.3.7
     KernSmooth KernSmooth 2.23-20
     MASS             MASS  7.3-58
     Matrix         Matrix   1.5-1
@@ -141,14 +142,3 @@ installed.packages() %>%
     tcltk           tcltk   4.2.2
     tools           tools   4.2.2
     utils           utils   4.2.2
-
-``` bash
-python --version;
-pip list
-```
-
-    Python 3.11.1
-    Package    Version
-    ---------- -------
-    pip        22.3.1
-    setuptools 65.5.0
