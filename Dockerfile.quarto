@@ -1,16 +1,24 @@
 ARG PYTHON_VERSION=3.11.1
-FROM shena4746/ubuntu-python-poetry:${PYTHON_VERSION} as py-quarto
+FROM shena4746/ubuntu-python-poetry:${PYTHON_VERSION} as base
 ARG QUARTO_VERSION="1.2.313"
-ARG WORKDIR=/workdir
-RUN apt update \
-	# install quarto
-	&& apt install -y curl gdebi-core \
-	&& curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb \
-	&& gdebi -n quarto-linux-amd64.deb \
-	# clean up
-	&& rm -f quarto-linux-amd64.deb \
-	&& apt remove -y --purge curl gdebi \
-	&& apt -y autoremove \
-	&& apt clean \
+ENV QUARTO_HOME=/opt/quarto/${QUARTO_VERSION}
+
+FROM base as quarto-builder
+RUN apt update
+RUN apt install -y curl
+RUN mkdir -p ${QUARTO_HOME}
+RUN curl -o quarto.tar.gz -L \
+	"https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz"
+RUN tar -zxvf quarto.tar.gz \
+	-C ${QUARTO_HOME} \
+	--strip-components=1
+RUN rm quarto.tar.gz
+
+FROM base as py-quarto
+COPY --from=quarto-builder ${QUARTO_HOME} ${QUARTO_HOME}
+RUN ln -s ${QUARTO_HOME}/bin/quarto /usr/local/bin/quarto \
+	&& apt update -y \
+	&& apt install -y libsqlite3-dev \
 	&& rm -rf /var/lib/apt/lists/*
+ARG WORKDIR=/workdir
 WORKDIR ${WORKDIR}
