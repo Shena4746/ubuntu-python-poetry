@@ -101,7 +101,7 @@ installed.packages() %>%
     mime             mime    0.12
     png               png   0.1-8
     rappdirs     rappdirs   0.3.3
-    reticulate reticulate    1.27
+    reticulate reticulate    1.28
     rlang           rlang   1.0.6
     rmarkdown   rmarkdown    2.20
     rprojroot   rprojroot   2.0.3
